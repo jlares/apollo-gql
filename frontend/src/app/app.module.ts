@@ -33,7 +33,7 @@ export class AppModule {
     apollo.create({
       // By default, this client will send queries to the `/graphql` endpoint on
       // the same host.
-      link: httpLink.create({ uri: 'https://api.example.com/graphql' }),
+      link: httpLink.create({ uri: 'https://graphql-pokemon.now.sh' }),
       cache: new InMemoryCache()
     });
   }
