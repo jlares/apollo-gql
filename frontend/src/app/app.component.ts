@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
-import { Observable } from 'apollo-client/util/Observable';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map'
 
 import { pokemon } from './gql/pokemon.query'
+import { Pokemon, PokemonQueryResponse } from './pokedex.types'
 
 @Component({
   selector: 'app-root',
@@ -23,13 +24,18 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentPokemonName = this.apollo.watchQuery<any>({
-      query: pokemon
-    })
+    this.getPokemon("pikachu").subscribe((res) => {
+      this.currentPokemonName = res.pokemon.name;
+    });
+  }
+
+  getPokemon(pokemonName: string) {
+    return this.apollo
+      .watchQuery<PokemonQueryResponse>({
+        query: pokemon,
+        variables: { pokemonName },
+      })
       .valueChanges
-      .subscribe((res) => {
-        this.currentPokemonName = res.data.pokemon.name;
-        console.log(JSON.stringify(res));
-      });  
+      .map(res => res.data)
   }
 }
